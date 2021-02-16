@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Knowledge paychart</title>
+    <script src="https://d3js.org/d3-dsv.v2.min.js"></script>
+    <script src="https://d3js.org/d3-fetch.v2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>    
+    <script src="dist/bundle.js" defer></script>
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    
+
+    <div id="app">
+        <h1>Электронный дневник МиКЭБИ</h1>
+        <div class="list">
+            <p>Список учащихся</p>
+            <li v-for="item in fullBase[0]" :id="item['rid']">
+                <button class="myButton" @click="showGraph">{{ item["child_name"] }} {{ item["child_surname"] }}</button>
+            </li>
+        </div>
+
+        <div class="graph">
+            <pie-chart :data="chartData" :options="chartOptions" :key="graphKey"></pie-chart>
+            <br>
+            {{graphName}}
+            <br>
+            {{graphInfo}}
+        </div>
+
+    </div>
+ 
+</body>
+
+</html>
