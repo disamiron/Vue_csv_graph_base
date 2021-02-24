@@ -1,9 +1,13 @@
 import PieChart from "./PieChart.js";
 
 var results = [];
+let childsByID = {};
 d3.csv("./base/base.csv").then(function(data) {
-    results.push(data)
+    data.forEach(child => childsByID[child.rid] = child); //new
+    results.push(data);
 });
+
+
 
 var app = new Vue({
     el: '#app',
@@ -33,19 +37,15 @@ var app = new Vue({
     methods: {
         showGraph: function(e) {
             var childId = e.path[1].id;
-            for (let i = 0; i < app.fullBase[0].length; i++) {
-                if(app.fullBase[0][i]["rid"]==childId){
-                    app.graphName = app.fullBase[0][i]["child_name"]+" "+app.fullBase[0][i]["child_surname"] + ".";
-                    app.graphInfo = "Школа №" + app.fullBase[0][i]["school_id"]+", "+app.fullBase[0][i]["classnum"] +" класс.";
-                    app.chartData.datasets[0]["data"][0] = +app.fullBase[0][i][1];
-                    app.chartData.datasets[0]["data"][1] = +app.fullBase[0][i][2];
-                    app.chartData.datasets[0]["data"][2] = +app.fullBase[0][i][3];
-                    app.chartData.datasets[0]["data"][3] = +app.fullBase[0][i][4];
-                    app.chartData.datasets[0]["data"][4] = +app.fullBase[0][i][5];
-                    app.chartData.datasets[0]["data"][5] = +app.fullBase[0][i][6];
-                    app.graphKey=app.graphKey+1;
-                }
+            let child = childsByID[childId];
+            let chartDataSet = app.chartData.datasets[0].data;
+
+            app.graphName = child.child_name+" "+child.child_surname+".";
+            app.graphInfo = `Школа № ${child.school_id}, ${child.classnum} класс.`;  
+            for (let i = 0; i < 6; i++){
+                chartDataSet[i] = +child[i+1];
             }
+            app.graphKey += 1;
         }
     },
     components: {
